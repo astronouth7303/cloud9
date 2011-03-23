@@ -79,7 +79,6 @@ sys.inherits(ShellPlugin, Plugin);
                  }
                  else {
                      if (!oExt.metadata) {
-                     	sys.puts("File: "+sName);
                          Fs.readFile(Path.normalize(__dirname + "/../" + sName + "/package.json"), function(err, data) {
                              if (err)
                                  return next();
