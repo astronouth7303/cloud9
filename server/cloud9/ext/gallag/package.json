@@ -1,0 +1,6 @@
+{
+	"name": "gallag-robot",
+	"description": "Provides a hook to the python from a client-side CLI.",
+	"version": "0.1",
+	"author": "Megan Kearl <megan.kearl@asu.edu>, Patrick Lu <yentingl@asu.edu>"
+}
