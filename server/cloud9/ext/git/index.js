@@ -59,7 +59,7 @@ sys.inherits(ShellGitPlugin, Plugin);
         return this.extend(struct, map || {});
     };
 
-    this.command = function(message, client, user) {
+    this.command = function(user, message, client) {
         if (message.command != "git")
             return false;
 

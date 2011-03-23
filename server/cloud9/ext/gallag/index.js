@@ -59,7 +59,7 @@ sys.inherits(ShellGallagPlugin, Plugin);
     };
     */
 
-    this.command = function(message, client, user) {
+    this.command = function(user, message, client) {
         if (message.command === "skill")
         {
             sys.puts("In killing mode...");
