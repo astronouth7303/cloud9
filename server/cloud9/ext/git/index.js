@@ -65,6 +65,7 @@ sys.inherits(ShellGitPlugin, Plugin);
 
         var _self = this;
         var argv = message.argv || [];
+
         this.spawnCommand(message.command, argv.slice(1), message.cwd, null, null, function(code, err, out) {
             _self.sendResult(0, message.command, {
                 code: code,
