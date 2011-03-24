@@ -1041,6 +1041,8 @@ return ext.register("ext/console/console", {
         winDbgConsole.previousSibling.show();
         
         apf.layout.forceResize();
+        apf.setStyleClass(btnCollapseConsole.$ext, "btn_console_openOpen");
+
     },
 
     disable : function(fromParent){
@@ -1059,6 +1061,7 @@ return ext.register("ext/console/console", {
         winDbgConsole.previousSibling.hide();
         
         apf.layout.forceResize();
+        apf.setStyleClass(btnCollapseConsole.$ext, '' , ['btn_console_openOpen']);
     },
 
     destroy : function(){
