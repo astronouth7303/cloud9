@@ -1337,11 +1337,11 @@
         
         .c9-toolbarbutton .c9-icon {
             display: none;
-            width:22px;
+            width:23px;
             height:19px;
             position:absolute;
             top:1px;
-            left:1px;
+            left:2px;
             background-position : 0 0;
             background-repeat   : no-repeat;
         }
@@ -2103,15 +2103,28 @@
             display : inline-block;
         }*/
 
-        .datagrid .loading, .datagrid .empty, .datagrid .offline{
+        .datagrid .loading, 
+        .datagrid .empty, 
+        .datagrid .offline{
             padding : 5px;
             margin : 0;
             white-space : normal;
         }
 
-        .datagrid .loading span, .datagrid .empty span, .datagrid .offline span{
+        .datagrid .loading span, 
+        .datagrid .empty span, 
+        .datagrid .offline span{
             background : white;
             display : inline;
+        }
+        
+        .datagrid .empty {
+            position:absolute;
+            top:18px;
+            left:0;
+            right:0;
+            height:15px;
+            line-height:12px;
         }
 
         .datagrid .root .message{
@@ -5424,8 +5437,9 @@
     </a:page>
 </a:presentation>
 </a:tab>
+
 <a:tab name="editor_tab">
-<a:style><![CDATA[
+    <a:style><![CDATA[
     .editor_tab {
         padding : 0 0 0 0;
         margin : 0 auto;
@@ -5485,25 +5499,39 @@
     }
 
     .editor_tab .btnsesssioncontainer .session_btn .tab_middle .sessiontab_icon {
-        height:16px;
+        height:8px;
         left:0;
         position:absolute;
-        top:5px;
-        width:16px;
+        top:10px;
+        width:5px;
+    }
+    
+    .editor_tab .btnsesssioncontainer .session_btn .sessiontab_icon {
+        background-repeat: no-repeat;
+        background-position: 0 0;
+    }
+    
+    .editor_tab .btnsesssioncontainer .saving_active .sessiontab_icon {
+        background-image: url(images/save-indicator-active-tab.gif);
+    }
+    
+    .editor_tab .btnsesssioncontainer .saving .sessiontab_icon {
+        background-image: url(images/save-indicator-inactive-tab.gif);
     }
 
     .editor_tab .btnsesssioncontainer .session_btn .tab_middle .sessiontab_title {
         overflow : hidden;
         padding  : 0 0 0 0;
-		-moz-user-select: -moz-none;
-	    -khtml-user-select: none;
-	    -webkit-user-select: none;
-	    -o-user-select: none;
-	    user-select: none;
+        -moz-user-select: -moz-none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -o-user-select: none;
+        user-select: none;
     }
 
     .editor_tab .btnsesssioncontainer .session_btn.btnclose .tab_middle .sessiontab_title {
         margin-right : 15px;
+        margin-left : 8px;
     }
 
     .editor_tab .scale .session_btn .sessiontab_title{
@@ -7063,4 +7091,46 @@
             </a:main>
         </a:presentation>
     </a:errorbox>
+
+	<a:img name="img">
+        <a:style><![CDATA[
+			.img{
+				overflow: auto;
+			}
+	
+            .img div {
+				width : 100%;
+				height : 100%;
+				display: -moz-box;
+				display: -webkit-box;
+				-moz-box-orient: horizontal;
+				-webkit-box-orient: horizontal;
+				box-orient: horizontal;
+				-moz-box-pack: center;
+				-webkit-box-pack: center;
+				box-pack: center;
+				-moz-box-align: center;
+				-webkit-box-align: center;
+				box-align: center;
+            }
+            
+            .img IMG {
+				display: block;
+            }
+			
+			.img span{
+				display:block;
+			}
+        ]]></a:style>
+
+        <a:presentation>
+            <a:main image="div/span/img/@src">
+                <div class="img">
+					<div>
+                    	<span><img src="" /></span>
+					</div>
+                </div>
+            </a:main>
+        </a:presentation>
+    </a:img>
 </a:skin>

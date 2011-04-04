@@ -86,6 +86,7 @@ Ide.DEFAULT_PLUGINS = [
     "ext/html/html",
     "ext/browser/browser",
     "ext/code/code",
+    "ext/imgview/imgview",
     "ext/extmgr/extmgr",
     "ext/run/run", //Add location rule
     "ext/debugger/debugger", //Add location rule
@@ -243,7 +244,7 @@ Ide.DEFAULT_PLUGINS = [
     this.addClientConnection = function(username, client, message) {
         var user = this.$users[username];
         if (!user)
-            return this.error("No session for user " + username, 99, message, client);
+            return this.error("No session for user " + username, 401, message, client);
 
         user.addClientConnection(client, message);
     };

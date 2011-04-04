@@ -29,20 +29,18 @@ return ext.register("ext/watcher/watcher", {
             _self               = this;
             
         function sendWatchFile(path) {
-            // console.log("Sending watchFile message for file " + path);
             ide.socket.send(JSON.stringify({
                 "command"     : "watcher",
                 "type"        : "watchFile",
-                "path"        : path
+                "path"        : ide.workspaceDir + path.slice(ide.davPrefix.length)
             }));
         }
         
         function sendUnwatchFile(path) {
-            // console.log("Sending unwatchFile message for file " + path);
             ide.socket.send(JSON.stringify({
                 "command"     : "watcher",
                 "type"        : "unwatchFile",
-                "path"        : path
+                "path"        : ide.workspaceDir + path.slice(ide.davPrefix.length)
             }));
         }           
        
@@ -171,41 +169,43 @@ return ext.register("ext/watcher/watcher", {
             if (_self.disabled) return;
             
             var pages = tabEditors.getPages();
-            with (e.message) {
-                if (type && type != "watcher")
-                    return;
-                if (expandedPaths[path])
-                    return ide.dispatchEvent("treechange", {
-                        path    : path,
-                        files   : files
+            var message = e.message;
+            if ((message.type && message.type != "watcher") || !message.path)
+                return;
+                
+            var path = ide.davPrefix + message.path.slice(ide.workspaceDir.length);
+
+            if (expandedPaths[path])
+                return ide.dispatchEvent("treechange", {
+                    path    : path,
+                    files   : message.files
+                });
+            if (!pages.some(function (page) {
+                return page.$model.data.getAttribute("path") == path;
+            }))
+                return;
+            switch (message.subtype) {
+            case "create":
+                break;
+            case "remove":
+                if (!removedPaths[path]) {
+                    removedPaths[path] = path;
+                    ++removedPathCount;
+                    checkPage();
+                    /*
+                    ide.dispatchEvent("treeremove", {
+                        path : path
                     });
-                if (!pages.some(function (page) {
-                    return page.$model.data.getAttribute("path") == path;
-                }))
-                    return;
-                switch (subtype) {
-                case "create":
-                    break;
-                case "remove":
-                    if (!removedPaths[path]) {
-                        removedPaths[path] = path;
-                        ++removedPathCount;
-                        checkPage();
-                        /*
-                        ide.dispatchEvent("treeremove", {
-                            path : path
-                        });
-                        */
-                    }
-                    break;
-                case "change":
-                    if (!changedPaths[path]) {
-                        changedPaths[path] = path;
-                        ++changedPathCount;
-                        checkPage();
-                    }
-                    break;
+                    */
                 }
+                break;
+            case "change":
+                if (!changedPaths[path]) {
+                    changedPaths[path] = path;
+                    ++changedPathCount;
+                    checkPage();
+                }
+                break;
             }
         });
         

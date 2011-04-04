@@ -5,8 +5,6 @@
  * @license GPLv3 <http://www.gnu.org/licenses/gpl.txt>
  */
 var deps = ["core/document"];
-if (!window.cloud9config.standalone)
-    deps.push("/socket.io/socket.io.js");
 
 require.def("core/ide", deps,
     function(Document) {
@@ -37,6 +35,8 @@ require.def("core/ide", deps,
 
             this.loggedIn = true;
 
+            this.onLine = false;
+
             this.dispatchEvent("load");
 
             /**** Error Handling ****/
@@ -44,10 +44,9 @@ require.def("core/ide", deps,
             //Catch all unhandled errors
             var loc = location.href;
             if (
-                false 
-                && location.protocol != "file:"
+                location.protocol != "file:"
                 && loc.indexOf("dev") == -1
-                && loc.indexOf("cloud9ide.com") > -1) 
+                && (loc.indexOf("cloud9ide.com") > -1 || loc.indexOf("c9.io") > -1))
             {
                 window.onerror = function(m, u, l) {
                     if (self.console)
@@ -56,13 +55,11 @@ require.def("core/ide", deps,
                         method      : "POST",
                         contentType : "application/json",
                         data        : apf.serialize({
-                            agent : navigator.userAgent,
-                            uid   : ide.userId,
-                            loc   : ide.loc,
-                            creds : self.auth && auth.getCredentials()[0],
-                            type  : "General Javascript Error",
-                            e     : [m, u, l],
-                            log   : apf.console.debugInfo.join("\n")
+                            agent       : navigator.userAgent,
+                            type        : "General Javascript Error",
+                            e           : [m, u, l],
+                            workspaceId : ide.workspaceId
+//                            log   : apf.console.debugInfo.join("\n")
                         })
                     });
                     return true;
@@ -74,19 +71,25 @@ require.def("core/ide", deps,
                         method      : "POST",
                         contentType : "application/json",
                         data        : apf.serialize({
-                            agent   : navigator.userAgent,
-                            uid     : ide.userId,
-                            creds   : self.auth && auth.getCredentials()[0],
-                            loc     : ide.loc,
-                            type    : "APF Error",
-                            message : e.message,
-                            tgt     : e.currentTarget && e.currentTarget.serialize(),
-                            url     : e.url,
-                            state   : e.state,
-                            e       : e.error,
-                            log     : apf.console.debugInfo.join("\n")
+                            agent       : navigator.userAgent,
+                            type        : "APF Error",
+                            message     : e.message,
+                            tgt         : e.currentTarget && e.currentTarget.serialize(),
+                            url         : e.url,
+                            state       : e.state,
+                            e           : e.error,
+                            workspaceId : ide.workspaceId
+//                            log     : apf.console.debugInfo.join("\n")
                         })
                     });
+                });
+            }
+            else {
+                window.onerror = function(m, u, l) {
+                    self.console && console.error("An error occurred", m, u, l);
+                }
+                apf.addEventListener("error", function(e){
+                    self.console && console.error("An APF error occurred", e);
                 });
             }
         };
@@ -104,7 +107,7 @@ require.def("core/ide", deps,
             // fire up the socket connection:
             var options = {
                 rememberTransport: false,
-                transports:  ["websocket", "htmlfile", "xhr-multipart", "flashsocket", "xhr-polling", "jsonp-polling"],
+                transports:  ["htmlfile", "xhr-multipart", "flashsocket", "xhr-polling", "jsonp-polling"],
                 connectTimeout: 5000,
                 transportOptions: {
                     "xhr-polling": {
