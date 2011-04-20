@@ -47,7 +47,8 @@ module.exports = Ide = function(options, httpServer, exts, socket) {
         requirejsConfig: requirejsConfig,
         offlineManifest: options.offlineManifest || "",
         projectName: options.projectName || this.workspaceDir.split("/").pop(),
-        version: options.version
+        version: options.version,
+        extra: options.extra
     };
 
     this.$users = {};
@@ -177,7 +178,7 @@ Ide.DEFAULT_PLUGINS = [
                 res.end(index);
             } else {
                 settingsPlugin.loadSettings(user, function(err, settings) {
-                    replacements.settingsXml = err ? "" : settings;
+                    replacements.settingsXml = err ? "" : settings.replace("]]>", "]]&gt;");
                     index = template.fill(index, replacements);
                     res.end(index);
                 });
