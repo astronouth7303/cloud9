@@ -28,7 +28,7 @@ var options = Parser.parse([
     {short: "n", long: "auth", description: "Define the authentication backend to use.", value: true, def: null, parser: function(value) {
         // When given on the command line, the form is module path, optionally followed by a query string.
         if (!value) { // Don't use authentication
-            return null;
+            return {backend: "auth", ops:{}};
         } else if (value.indexOf("?") == -1) { // Backend given, but no options
             return {backend: value, ops: {}};
         } else { // Backend and options present.

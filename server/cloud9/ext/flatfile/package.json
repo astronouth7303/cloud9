@@ -1,0 +1,6 @@
+{
+    "name": "flatfile",
+    "description": "Simple authentication backend using a single text file.",
+    "version": "0.1",
+    "author": "James Bliss <james.bliss@astro73.com>"
+}

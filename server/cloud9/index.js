@@ -17,13 +17,14 @@ exports.main = function(options) {
         port = options.port,
         ip = options.ip,
         user = options.user,
-        group = options.group;
+        group = options.group,
+        auth = options.auth;
         
     if (!Path.existsSync(projectDir)) 
         throw new Error("Workspace directory does not exist: " + projectDir);
         
     var ideProvider = function(projectDir, server) {
-        var uid = "owner" + Math.random().toString().slice(2);
+        var uid = "owner" + Math.random().toString().slice(2); //AUTH
         // load plugins:
         var exts = {};
         Fs.readdirSync(Path.normalize(__dirname + "/ext")).forEach(function(name){
