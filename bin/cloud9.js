@@ -7,6 +7,7 @@ require ("../support/paths");
 
 var Sys = require("sys"),
     Fs  = require("fs"),
+    querystring = require("querystring"),
     Parser = require("cloud9/optparse");
 
 if (parseInt(process.version.split(".")[1]) < 2) {
@@ -24,6 +25,19 @@ var options = Parser.parse([
     {short: "d", long: "debug", description: "Activate debug-mode.", def: false},
     {short: "u", long: "user", description: "Run child processes as a specific user.", def: false },
     {short: "g", long: "group", description: "Run child processes with a specific group.", def: false },
+    {short: "n", long: "auth", description: "Define the authentication backend to use.", value: true, def: null, parser: function(value) {
+        // When given on the command line, the form is module path, optionally followed by a query string.
+        if (!value) { // Don't use authentication
+            return null;
+        } else if (value.indexOf("?") == -1) { // Backend given, but no options
+            return {backend: value, ops: {}};
+        } else { // Backend and options present.
+            var i = value.indexOf("?"),
+                b = value.substring(0, i),
+                o = value.substring(i+1);
+            return {backend: b, ops: querystring.parse(o)};
+        }
+    }},
     {short: "c", long: "config", description: "Load the configuration from a config file. Overrides command-line options.", value: true, def: null, parser: function(value) {
             var pref = ( value.charAt(0) == "/" ) ? "" :  process.cwd() + "/";
             return require(pref + value.replace(".js", "")).Config;
