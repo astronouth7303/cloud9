@@ -480,6 +480,7 @@ return ext.register("ext/console/console", {
             case "python":
             case "ps":
             case "git":
+            case "npm":
             case "pwd":
             case "ls":
                 res = message.body;
