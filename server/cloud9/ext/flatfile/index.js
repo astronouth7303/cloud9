@@ -19,7 +19,7 @@ sys.inherits(FlatfilePlugin, Plugin);
 
 (function() {
     this.users = {};
-    this.authinit = function(ops) {
+    this.authinit = function(ops) { // This is used to pass the auth options from the config
         if (!ops.file) throw "flatfile backend requires the file as an argument.";
         var data = fs.readFileSync(ops.file); // Can I make safely this asyncronous?
         for (var l in data.split(/\n|\r|\r\n/)) if (l) { // Filter out blank lines
@@ -27,6 +27,9 @@ sys.inherits(FlatfilePlugin, Plugin);
             this.users[q.user] = q.password;
         }
     };
+    
+    // TODO: Check if a user is logged in?
+    // TODO: Handle authentication process
     
     this.command = function(user, message, client) {
         if (message.command != "attach")
